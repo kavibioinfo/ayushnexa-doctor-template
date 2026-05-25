@@ -23,7 +23,8 @@ export default function Home() {
 
   function openWhatsAppDirect(e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>) {
   e.preventDefault();
-  ...
+  const msg = `Namaste! CityLife Hospital madhe appointment book karaychi ahe. Please help kara.`;
+  window.open(`https://wa.me/${HOSPITAL_WA}?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
   function handleQuickBook() {
