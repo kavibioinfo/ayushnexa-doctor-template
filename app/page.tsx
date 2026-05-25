@@ -88,8 +88,8 @@ Please confirm my appointment slot. Thank you! 🙏`;
   }
 
   useEffect(() => {
-    // डेटपिकरला आजची किमान तारीख सेट करणे
-    const dateInput = document.getElementById('prefDate');
+    // टाईपस्क्रिप्टसाठी याला HTMLInputElement म्हणून घोषित करणे
+    const dateInput = document.getElementById('prefDate') as HTMLInputElement;
     if (dateInput) {
       dateInput.min = new Date().toISOString().split('T')[0];
     }
