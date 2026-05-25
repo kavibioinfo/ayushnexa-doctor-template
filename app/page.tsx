@@ -7,10 +7,10 @@ export default function Home() {
   // तुमची Google Apps Script ची वेबाप URL इथे टाका
   const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxX6czErsHGbTLQEK2qPS5-cx_eQVw_DP18ZD5D1TZ05p2hKUbisJLdLZ-dhhsl5GM9mw/exec';
 
-  function selectSlot(e) {
-    document.querySelectorAll('.time-slot').forEach(t => t.classList.remove('active'));
-    e.target.classList.add('active');
-  }
+  function selectSlot(e: React.MouseEvent<HTMLDivElement>) {
+  document.querySelectorAll('.time-slot').forEach(t => t.classList.remove('active'));
+  (e.target as HTMLElement).classList.add('active');
+}
 
   function scrollToForm() {
     document.getElementById('appointment').scrollIntoView({ behavior: 'smooth' });
@@ -21,11 +21,10 @@ export default function Home() {
     window.open(`https://wa.me/${HOSPITAL_WA}?text=${encodeURIComponent(msg)}`, '_blank');
   }
 
-  function openWhatsAppDirect(e) {
-    e.preventDefault();
-    const msg = `Namaste! CityLife Hospital madhe appointment book karaychi ahe. Please help kara.`;
-    window.open(`https://wa.me/${HOSPITAL_WA}?text=${encodeURIComponent(msg)}`, '_blank');
-  }
+  function openWhatsAppDirect(e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>) {
+  e.preventDefault();
+  ...
+}
 
   function handleQuickBook() {
     const msg = `Namaste! Website varu appointment book karaychi ahe. Please available slots sangaa.`;
@@ -603,7 +602,7 @@ Please confirm my appointment slot. Thank you! 🙏`;
             </div>
             <div className="form-group">
               <label>Symptoms / Reason for Visit</label>
-              <textarea id="symptoms" rows="3" placeholder="Briefly describe your symptoms..."></textarea>
+              <textarea id="symptoms" rows={3} placeholder="Briefly describe your symptoms..."></textarea>
             </div>
             <button className="submit-btn" onClick={handleFormSubmit}>📲 Confirm via WhatsApp →</button>
           </div>
