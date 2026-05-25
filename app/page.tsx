@@ -33,13 +33,14 @@ export default function Home() {
   }
 
   function handleFormSubmit() {
-    const name = document.getElementById('patientName').value.trim();
-    const phone = document.getElementById('patientPhone').value.trim();
-    const dept = document.getElementById('department').value;
-    const date = document.getElementById('prefDate').value;
-    const time = document.getElementById('prefTime').value;
-    const symptoms = document.getElementById('symptoms').value.trim();
-    const age = document.getElementById('patientAge').value;
+    // टाईपस्क्रिप्टसाठी इनपुट टाईप कास्टिंग करणे (Type Assertion)
+    const name = (document.getElementById('patientName') as HTMLInputElement)?.value.trim();
+    const phone = (document.getElementById('patientPhone') as HTMLInputElement)?.value.trim();
+    const dept = (document.getElementById('department') as HTMLSelectElement)?.value;
+    const date = (document.getElementById('prefDate') as HTMLInputElement)?.value;
+    const time = (document.getElementById('prefTime') as HTMLSelectElement)?.value;
+    const symptoms = (document.getElementById('symptoms') as HTMLTextAreaElement)?.value.trim();
+    const age = (document.getElementById('patientAge') as HTMLInputElement)?.value;
 
     if (!name || !phone || !dept) {
       alert('Please fill in Name, Phone, and Department.');
@@ -78,7 +79,8 @@ export default function Home() {
 Please confirm my appointment slot. Thank you! 🙏`;
 
     window.open(`https://wa.me/${HOSPITAL_WA}?text=${encodeURIComponent(msg)}`, '_blank');
-    document.getElementById('successModal').classList.add('show');
+    const modal = document.getElementById('successModal');
+    if (modal) modal.classList.add('show');
   }
 
   function closeModal() {
