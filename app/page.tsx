@@ -1,31 +1,46 @@
 'use client';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 export default function Home() {
-  // हॉस्पिटलचा व्हॉट्सॲप नंबर (इथे नंतर क्लायंटचा नंबर येईल)
   const HOSPITAL_WA = '919876543210';
-  // तुमची Google Apps Script ची वेबाप URL इथे टाका
   const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxX6czErsHGbTLQEK2qPS5-cx_eQVw_DP18ZD5D1TZ05p2hKUbisJLdLZ-dhhsl5GM9mw/exec';
 
-  function selectSlot(e: React.MouseEvent<HTMLDivElement>) {
-  document.querySelectorAll('.time-slot').forEach(t => t.classList.remove('active'));
-  (e.target as HTMLElement).classList.add('active');
-}
+  const [mounted, setMounted] = useState(false);
 
-  function scrollToForm() {
-    document.getElementById('appointment').scrollIntoView({ behavior: 'smooth' });
+  // संपूर्ण फाईलमध्ये फक्त हा एकच मास्टर useEffect आहे (दुसरा कोणताही नाही!)
+  useEffect(() => {
+    setMounted(true);
+    
+    const dateInput = document.getElementById('prefDate') as HTMLInputElement;
+    if (dateInput) {
+      dateInput.min = new Date().toISOString().split('T')[0];
+    }
+  }, []);
+
+  if (!mounted) {
+    return <div style={{ background: '#0a1628', minHeight: '100vh' }}></div>;
   }
 
-  function openWhatsApp(doctor, dept) {
+  function selectSlot(e: React.MouseEvent<HTMLDivElement>) {
+    document.querySelectorAll('.time-slot').forEach(t => t.classList.remove('active'));
+    (e.target as HTMLElement).classList.add('active');
+  }
+
+  function scrollToForm() {
+    const element = document.getElementById('appointment');
+    if (element) element.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  function openWhatsApp(doctor: string, dept: string) {
     const msg = `Namaste! Mala ${doctor} (${dept}) sathi appointment book karaychi ahe. Kripaya slot confirm kara.`;
     window.open(`https://wa.me/${HOSPITAL_WA}?text=${encodeURIComponent(msg)}`, '_blank');
   }
 
   function openWhatsAppDirect(e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>) {
-  e.preventDefault();
-  const msg = `Namaste! CityLife Hospital madhe appointment book karaychi ahe. Please help kara.`;
-  window.open(`https://wa.me/${HOSPITAL_WA}?text=${encodeURIComponent(msg)}`, '_blank');
-}
+    e.preventDefault();
+    const msg = `Namaste! CityLife Hospital madhe appointment book karaychi ahe. Please help kara.`;
+    window.open(`https://wa.me/${HOSPITAL_WA}?text=${encodeURIComponent(msg)}`, '_blank');
+  }
 
   function handleQuickBook() {
     const msg = `Namaste! Website varu appointment book karaychi ahe. Please available slots sangaa.`;
@@ -33,7 +48,6 @@ export default function Home() {
   }
 
   function handleFormSubmit() {
-    // टाईपस्क्रिप्टसाठी इनपुट टाईप कास्टिंग करणे (Type Assertion)
     const name = (document.getElementById('patientName') as HTMLInputElement)?.value.trim();
     const phone = (document.getElementById('patientPhone') as HTMLInputElement)?.value.trim();
     const dept = (document.getElementById('department') as HTMLSelectElement)?.value;
@@ -47,7 +61,6 @@ export default function Home() {
       return;
     }
 
-    // 🔥 BACKEND AUTOMATION: गुगल शीटमध्ये डेटा पाठवणे (No-CORS Mode)
     const payload = {
       name: name,
       phone: phone,
@@ -65,7 +78,6 @@ export default function Home() {
       body: JSON.stringify(payload)
     });
 
-    // 💬 WHATSAPP AUTOMATION: व्हॉट्सॲपवर मेसेज फॉरवर्ड करणे
     const msg = `🏥 *Appointment Request — CityLife Hospital*
 
 👤 Name: ${name}
@@ -84,16 +96,9 @@ Please confirm my appointment slot. Thank you! 🙏`;
   }
 
   function closeModal() {
-    document.getElementById('successModal').classList.remove('show');
+    const modal = document.getElementById('successModal');
+    if (modal) modal.classList.remove('show');
   }
-
-  useEffect(() => {
-    // टाईपस्क्रिप्टसाठी याला HTMLInputElement म्हणून घोषित करणे
-    const dateInput = document.getElementById('prefDate') as HTMLInputElement;
-    if (dateInput) {
-      dateInput.min = new Date().toISOString().split('T')[0];
-    }
-  }, []);
 
   return (
     <>
@@ -193,7 +198,7 @@ Please confirm my appointment slot. Thank you! 🙏`;
         .doc-info { padding: 20px 22px; }
         .doc-info h3 { font-size: 17px; font-weight: 500; margin-bottom: 4px; }
         .doc-info .spec { font-size: 13px; color: var(--teal-light); margin-bottom: 12px; }
-        .doc-meta { display: flex; gap: 16px; }
+        .doc-info .doc-meta { display: flex; gap: 16px; }
         .doc-meta-item { font-size: 12px; color: var(--text-muted); }
         .doc-meta-item strong { display: block; font-size: 14px; color: white; font-weight: 500; }
         .book-btn { display: block; width: 100%; margin-top: 16px; background: rgba(14,165,176,0.12); border: 1px solid rgba(14,165,176,0.3); color: var(--teal-light); padding: 10px; border-radius: 8px; font-size: 13px; font-weight: 500; cursor: pointer; text-align: center; transition: background 0.2s; text-decoration: none; }
